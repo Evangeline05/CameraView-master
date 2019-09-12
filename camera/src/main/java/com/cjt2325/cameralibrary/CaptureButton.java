@@ -40,6 +40,8 @@ public class CaptureButton extends View {
     public static final int STATE_RECORDERING = 0x004; //录制状态
     public static final int STATE_BAN = 0x005;         //禁止状态
 
+    int flag = 0;
+
     private int progress_color = 0xEE16AE16;            //进度条颜色
     private int outside_color = 0xEEDCDCDC;             //外圆背景色
     private int inside_color = 0xFFFFFFFF;              //内圆背景色
@@ -146,16 +148,27 @@ public class CaptureButton extends View {
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                LogUtil.i("state = " + state);
-                if (event.getPointerCount() > 1 || state != STATE_IDLE)
-                    break;
-                event_Y = event.getY();     //记录Y值
-                state = STATE_PRESS;        //修改当前状态为点击按下
+                if(flag == 0) {
+                    LogUtil.i("state = " + state);
+                    if (event.getPointerCount() > 1 || state != STATE_IDLE)
+                        break;
+                    event_Y = event.getY();     //记录Y值
+                    state = STATE_PRESS;        //修改当前状态为点击按下
 
-                //判断按钮状态是否为可录制状态
-                if ((button_state == BUTTON_STATE_ONLY_RECORDER || button_state == BUTTON_STATE_BOTH))
-                    postDelayed(longPressRunnable, 500);    //同时延长500启动长按后处理的逻辑Runnable
-                break;
+                    //判断按钮状态是否为可录制状态
+                    if ((button_state == BUTTON_STATE_ONLY_RECORDER || button_state == BUTTON_STATE_BOTH))
+                        postDelayed(longPressRunnable, 500);    //同时延长500启动长按后处理的逻辑Runnable
+                    break;
+                }
+                else if(flag == 1)
+                {
+                    flag = 0;
+                    timer.cancel(); //停止计时器
+                    recordEnd();    //录制结束
+                    break;
+
+
+                }
             case MotionEvent.ACTION_MOVE:
                 if (captureLisenter != null
                         && state == STATE_RECORDERING
@@ -188,9 +201,12 @@ public class CaptureButton extends View {
                 break;
             //当前是长按状态
             case STATE_RECORDERING:
-                timer.cancel(); //停止计时器
-                recordEnd();    //录制结束
-                break;
+
+
+//                    timer.cancel(); //停止计时器
+//                    recordEnd();    //录制结束
+//                    break;
+
         }
     }
 
@@ -270,6 +286,7 @@ public class CaptureButton extends View {
                 super.onAnimationEnd(animation);
                 //设置为录制状态
                 if (state == STATE_LONG_PRESS) {
+                    flag = 1;
                     if (captureLisenter != null)
                         captureLisenter.recordStart();
                     state = STATE_RECORDERING;

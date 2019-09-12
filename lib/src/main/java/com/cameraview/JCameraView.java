@@ -380,7 +380,7 @@ public class JCameraView extends RelativeLayout implements SurfaceHolder.Callbac
         }
         mediaRecorder.setMaxDuration(60000);
         mediaRecorder.setVideoEncodingBitRate(5 * 1024 * 1024);
-        mediaRecorder.setVideoFrameRate(30);
+        mediaRecorder.setVideoFrameRate(25);
         mediaRecorder.setPreviewDisplay(mHolder.getSurface());
         // 设置视频文件输出的路径
         mediaRecorder.setOutputFile("/sdcard/love.mp4");

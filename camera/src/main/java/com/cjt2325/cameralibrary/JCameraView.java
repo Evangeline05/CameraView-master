@@ -204,7 +204,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
                     public void run() {
                         machine.stopRecord(true, time);
                     }
-                }, 15000 - time);
+                }, 1500 - time);
             }
 
             @Override
