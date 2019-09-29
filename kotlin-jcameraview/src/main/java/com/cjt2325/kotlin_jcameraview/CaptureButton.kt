@@ -226,10 +226,10 @@ class CaptureButton(context: Context, size: Float) : View(context) {
     fun recordEnd() {
         if (state != STATE_RECORDERING)
             return
-        if (recorder_time < 15000) {
+        if (recorder_time < 10000) {
             if (mCaptureListener != null)
                 mCaptureListener?.recorderShort()
-//            i("录制时间小于1500")
+//            i("录制时间小于10s")
         } else {
             if (mCaptureListener != null)
                 mCaptureListener?.recorderEnd(recorder_time)
